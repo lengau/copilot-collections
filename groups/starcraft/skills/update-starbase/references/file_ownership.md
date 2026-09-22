@@ -76,8 +76,9 @@ Use this reference when resolving conflicts during a Starbase sync merge.
   already up to date.
 - For library repositories, delete `docs/release-notes/`.
 - For library repositories, delete `.github/README.md`.
-- For library repositories, delete `AGENTS.app.md`, `AGENTS.lib.md`, and the
-  Starbase scaffold package `starcraft/__init__.py`.
+- For library repositories, delete the Starbase scaffold package
+  `starcraft/__init__.py`. (`AGENTS.app.md`/`AGENTS.lib.md` deletion is
+  handled per repository type in "Conflict rule 3: AGENTS templates" below.)
 - For library repositories, replace any scaffolded `CONTRIBUTING.md` with a
   short repository-specific guide that matches the actual project name, repo
   URLs, and commands.

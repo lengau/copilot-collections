@@ -82,8 +82,13 @@ Before creating a PR, ensure repository checks pass:
 ```bash
 make format
 make lint
+make docs
 make test-fast
 ```
+
+`make lint` builds the docs as part of linting, but run `make docs` too so
+docs-specific failures are caught and reported clearly on their own, not just
+as a side effect of the lint target.
 
 Do not create the PR until these commands complete successfully.
 

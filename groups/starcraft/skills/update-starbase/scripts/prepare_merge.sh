@@ -118,6 +118,7 @@ NEXT STEPS FOR THE AGENT
 2. Run pre-PR validation:
      make format
      make lint
+     make docs
      make test-fast
 
 3. Open a DRAFT PR, apply the label "PR: Merge", and request a
@@ -172,6 +173,7 @@ NEXT STEPS FOR THE AGENT
 4. Run pre-PR validation:
      make format
      make lint
+     make docs
      make test-fast
 
 5. Open a DRAFT PR, apply the label "PR: Merge", and request a
