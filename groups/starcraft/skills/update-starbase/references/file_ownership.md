@@ -162,3 +162,19 @@ For application repositories:
 - use `AGENTS.app.md` as the source template for `AGENTS.md`,
 - keep `AGENTS.lib.md` deleted,
 - keep `AGENTS.app.md` deleted after using it only as a template reference.
+
+Preserving template structure while filling it in:
+- Preserve the source template's structure and formatting (tables, headings,
+  list types) when filling in TODOs and repo-specific details. Only change
+  formatting if the content genuinely cannot fit in the existing structure
+  (e.g. a table column is too narrow for a required value), and if so, explain
+  why in the merge commit message.
+- When the current repository's own package must be removed from a list of
+  dependencies (e.g. a self-reference in a "Craft apps and libraries" table),
+  do this as a targeted row/item removal — not as a side effect of
+  reformatting the surrounding list or table into a different structure.
+- Before finalizing `AGENTS.md`, diff its structure against the source
+  template (headings, tables vs. prose, list types) to confirm only intended
+  repo-specific substitutions and deletions were made. Flag any unintended
+  structural drift (e.g. a table collapsed into a flat list) for review rather
+  than merging it silently.
