@@ -68,6 +68,21 @@ printed. The steps below expand on each item in detail:
      proposes the fix as an actual GitHub suggestion (a fenced
      ` ```suggestion ` block), so a human reviewer can review and apply it
      explicitly rather than the bot self-approving its own invented fix.
+   - **Skip comments on routine mechanical regenerations**: a purely mechanical,
+     expected side effect of the merge (for example, `uv.lock` being
+     regenerated after merging dependency changes) does not need its own
+     provenance comment unless something about that specific regeneration is
+     non-obvious (e.g. an unexpected transitive version change worth
+     flagging). Reviewers have called out such comments as unnecessary noise;
+     when in doubt, prefer silence over a comment that just restates the
+     expected mechanical outcome.
+   - **Cite precedent with a link, not just a claim**: when a provenance or
+     custom-change comment says a resolution "matches" or was "already used
+     in" another repository's Starbase merge (for example, the same
+     `Makefile` lint-target conflict resolved the same way in
+     `craft-application`), the comment must link the actual PR where that
+     precedent was set, and briefly note any discussion that happened there
+     — not just assert the precedent by name.
 
 ## Output
 
@@ -100,17 +115,34 @@ throughout the merge, not just at the end.
 
 Some fixes discovered while merging or validating are not actually part of
 the Starbase sync itself — they're pre-existing or unrelated issues that the
-merge happened to surface (e.g. a follow-up fix that only became necessary
-*because of* an earlier follow-up fix, an unrelated dependency-version bump,
-or a latent bug the new tooling now catches). Bundling these into the merge
-PR makes it harder to review and obscures which changes actually came from
-Starbase.
+merge happened to surface. Bundling these into the merge PR makes it harder
+to review and obscures which changes actually came from Starbase. Recognized
+triggers include:
+
+- A follow-up fix that only became necessary *because of* an earlier
+  follow-up fix (a chain reaction), rather than because of the Starbase merge
+  itself.
+- A dependency or version bump driven by something unrelated to the sync
+  (e.g. a security-scanner finding against a pinned test fixture) — the bump
+  is legitimate, but it isn't a Starbase change and stands on its own merits.
+- A purely mechanical reformatting diff produced by a newly introduced
+  formatter or linter (e.g. `tombi`, `shfmt`) with no logic changes — split
+  the reformat-only diff into its own PR so the merge PR's diff isn't
+  dominated by noise unrelated to the actual content change, and so the
+  formatting-only change can be reviewed and reverted independently.
+- A large, net-new file generated from a template (e.g. `AGENTS.md` derived
+  from `AGENTS.lib.md`/`AGENTS.app.md`) — even though it's part of the
+  Starbase scaffolding, its size and repo-specific content make it worth
+  reviewing as its own unit rather than folding into the broader merge diff.
+- A latent bug the new tooling now catches that isn't itself a Starbase file
+  or convention.
 
 When you identify such a change:
 1. **Recognize the signal**: ask whether the fix would still be needed on
    `main` even without the Starbase merge, or whether it exists only to
-   patch a side effect of another fixup you just made. If either is true, it
-   likely belongs in its own PR rather than as a merge-PR follow-up commit.
+   patch a side effect of another fixup you just made, or matches one of the
+   trigger categories above. If any of these are true, it likely belongs in
+   its own PR rather than as a merge-PR follow-up commit.
 2. **Split it out**: create a new branch from `origin/main` (not the merge
    branch), apply just that fix, and open it as a **draft PR** against `main`
    describing the fix on its own merits — not as a Starbase merge follow-up.
@@ -149,6 +181,11 @@ When opening the PR, apply the label:
 - Open the PR as a draft, request a Copilot review while it is still draft, and
   keep iterating until the review is clean enough to mark ready.
 - Check the PR's CI status before handing it off.
+- If a reviewer's requested change contradicts a rule in this skill (the
+  file-ownership map, a conflict-resolution rule, or any other documented
+  rule), see
+  [`references/reviewer_feedback_conflicts.md`](references/reviewer_feedback_conflicts.md)
+  before acting on it.
 - If CI is still running or likely to fail, start a background agent to watch
   the PR checks and report failures so they can be fixed promptly.
 - You do not need to wait for the full matrix to finish before fixing failures
@@ -275,3 +312,8 @@ complete ownership map and decision rules, including:
   `X | Y`, `tuple[X, Y]`, etc., and Python version caveats).
 - **Conflict rule 3** – AGENTS template handling (library vs. application
   repositories).
+
+If a reviewer's PR feedback asks for something that contradicts one of these
+rules (or any other rule in this skill), see
+[`references/reviewer_feedback_conflicts.md`](references/reviewer_feedback_conflicts.md)
+for how to resolve it — don't silently follow one side without recording why.

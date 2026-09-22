@@ -20,9 +20,27 @@ Use this reference when resolving conflicts during a Starbase sync merge.
 - `.github/workflows/security-scan.yaml`: keep the osv-scanner config pointing
   at the root `osv-scanner.toml`, not a nested `source/` path.
 - `.gitignore`: the shared baseline is Starbase-owned; the child repository may
-  append repository-specific ignore entries at the bottom.
+  append repository-specific ignore entries at the bottom. **Don't silently
+  remove child entries that look redundant with the shared baseline** — a
+  reviewer may know of a real (if undocumented) reason a repo-specific entry
+  exists (e.g. files generated only by running that repo's own scripts). If
+  an entry looks removable, keep it and add a short comment marking it as a
+  repository-specific addition instead of deleting it; only remove an entry
+  outright when you have positive confirmation it's obsolete (e.g. `git
+  blame`/history showing it's unused, or explicit reviewer confirmation).
 - `.pre-commit-config.yaml` for the shared hook set; if the same hook appears
-  in both repos, keep the newer revision pin.
+  in both repos, keep the newer revision pin. **Never downgrade a hook**: for
+  every hook present in both the child repo's current config and Starbase's,
+  explicitly compare the `rev` (or version) pins before merging — don't
+  assume Starbase's value is always newer just because it's the sync source.
+  If Starbase's pin for a hook is actually older than the child's current
+  pin, keep the child's newer pin for that hook and note the exception in the
+  merge commit message (see "Conflict resolution applied" in the merge commit
+  message template); this is a case where the "always take starbase/main"
+  default is overridden by a concrete version comparison, not by reviewer
+  preference. As part of pre-PR validation, diff the resulting
+  `.pre-commit-config.yaml` against both source files' hook lists to confirm
+  no hook's version regressed.
 - `.readthedocs.yaml`.
 - `README.md`.
 - Any other shared build or workflow file that is explicitly documented as
@@ -53,6 +71,21 @@ Use this reference when resolving conflicts during a Starbase sync merge.
   from `docs/conf.py`; only un-exclude them when the content is ready to ship.
 - `docs/{how-to,explanation,reference,tutorials}`: the directory names are
   Starbase-owned; if they move, move the whole docs tree accordingly.
+- `docs/.custom_wordlist.txt` (or equivalent global spelling/vale wordlist):
+  take the union of both sides' entries by default, but **only add terms
+  that are genuinely global** — safe to accept everywhere in the docs, such
+  as product/project names (`Starcraft`, the child repo's own name) or other
+  terms that should never be flagged regardless of context. For a narrow,
+  one-off term that only applies to a specific page or sentence, use the
+  docs tooling's scoped/inline ignore mechanism instead (e.g. a
+  `vale-ignore`-style comment at the point of use) rather than adding it to
+  the global wordlist. If it's unclear whether a file like this should be
+  reclassified as fully Starbase-owned going forward (so that future
+  additions come only from `starbase/main` and get expressed as scoped
+  ignores in child repos), raise that as an explicit question for the
+  reviewer/maintainer rather than deciding unilaterally — this changes the
+  file's entry in this ownership map and should be confirmed before treating
+  it as settled.
 - Whenever a Starbase-driven rename or move deletes a documentation file or
   directory that existed before the merge (for example
   `docs/how-to-guides/` → `docs/how-to/`), add a matching entry to
