@@ -167,6 +167,15 @@ When you identify such a change:
 5. **Use the same provenance conventions**: preparation PRs still use the
    robot-prefix comment template and merge-commit-message rules where
    applicable — they are otherwise ordinary PRs, not Starbase-merge-specific.
+6. **Link the source template when the PR is the agent's own original work
+   derived from one**: for a preparation PR whose content is written/adapted
+   by the agent from a specific Starbase template or scaffold file (e.g. an
+   `AGENTS.md` written from `AGENTS.lib.md`/`AGENTS.app.md`), the PR
+   description must name that exact source file and link directly to it at
+   the commit/ref of `starbase/main` it was derived from, so a human reviewer
+   can open both side-by-side and compare them line-for-line. A vague
+   reference to "the Starbase template" is not sufficient — link the actual
+   file.
 
 Do not create the merge PR's ready-for-review PR (mark it out of draft) until
 every preparation PR it depends on has been merged.
