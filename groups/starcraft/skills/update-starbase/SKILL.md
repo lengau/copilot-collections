@@ -87,6 +87,53 @@ make test-fast
 
 Do not create the PR until these commands complete successfully.
 
+## Creating preparation PRs (as needed)
+
+You won't know upfront which fixes need their own PR — this only becomes
+clear while resolving conflicts and running validation. Watch for it
+throughout the merge, not just at the end.
+
+Some fixes discovered while merging or validating are not actually part of
+the Starbase sync itself — they're pre-existing or unrelated issues that the
+merge happened to surface (e.g. a follow-up fix that only became necessary
+*because of* an earlier follow-up fix, an unrelated dependency-version bump,
+or a latent bug the new tooling now catches). Bundling these into the merge
+PR makes it harder to review and obscures which changes actually came from
+Starbase.
+
+When you identify such a change:
+1. **Recognize the signal**: ask whether the fix would still be needed on
+   `main` even without the Starbase merge, or whether it exists only to
+   patch a side effect of another fixup you just made. If either is true, it
+   likely belongs in its own PR rather than as a merge-PR follow-up commit.
+2. **Split it out**: create a new branch from `origin/main` (not the merge
+   branch), apply just that fix, and open it as a **draft PR** against `main`
+   describing the fix on its own merits — not as a Starbase merge follow-up.
+3. **Stack it before the merge PR**: base the preparation PR on `main` so it
+   can be reviewed and merged independently. Once it lands (or while it's
+   still pending review), rebase the merge branch onto the updated `main` so
+   the fix is picked up naturally and drops out of the merge PR's diff and
+   follow-up-fix commit list.
+   - If a second, related preparation fix comes up before the first one has
+     merged (e.g. it depends on the first fix, or the two are easier to
+     review as an ordered sequence), don't pile both onto the same branch or
+     open unrelated parallel PRs from `main`. Instead use GitHub's
+     [stacked pull requests](https://docs.github.com/en/pull-requests/how-tos/stacked-pull-requests):
+     branch the second fix from the first preparation PR's branch and open it
+     as a draft PR targeting that branch, so GitHub renders the dependency
+     chain and each PR's diff stays scoped to just its own fix. Keep chaining
+     additional preparation PRs the same way if more come up.
+4. **Don't block on it**: if a preparation PR (or stack) hasn't merged yet,
+   continue the Starbase merge work; rebase again once each one lands. Note
+   pending preparation PRs in the merge PR description so reviewers know why
+   a fix they might expect to see isn't there.
+5. **Use the same provenance conventions**: preparation PRs still use the
+   robot-prefix comment template and merge-commit-message rules where
+   applicable — they are otherwise ordinary PRs, not Starbase-merge-specific.
+
+Do not create the merge PR's ready-for-review PR (mark it out of draft) until
+every preparation PR it depends on has been merged.
+
 ## PR labeling (required)
 
 When opening the PR, apply the label:
