@@ -187,6 +187,15 @@ When you identify such a change:
    can open both side-by-side and compare them line-for-line. A vague
    reference to "the Starbase template" is not sufficient — link the actual
    file.
+7. **Link the originating Starbase PR for major changes**: when a preparation
+   PR is about a major reorganization (e.g. moving `docs/.sphinx/` to
+   `docs/_dev/`), the addition of a significant new file (e.g. a new
+   scaffold/config file introduced by Starbase), or the addition of a new
+   linter/formatter (per the "default-enabled tool" trigger above), the PR
+   description must link the specific `starbase` PR that introduced that
+   change upstream, in addition to any source-file link required above — not
+   just describe the change in prose. This gives reviewers the full upstream
+   context and discussion, not just the resulting diff.
 
 Do not create the merge PR's ready-for-review PR (mark it out of draft) until
 every preparation PR it depends on has been merged.
