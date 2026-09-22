@@ -130,6 +130,13 @@ triggers include:
   the reformat-only diff into its own PR so the merge PR's diff isn't
   dominated by noise unrelated to the actual content change, and so the
   formatting-only change can be reviewed and reverted independently.
+- Starbase introducing a new formatter or linter that this repository doesn't
+  yet run (whether or not it also requires a purely mechanical reformat, per
+  the point above) — open a prep PR that just enables the new tool (adds it
+  to `common.mk`/pre-commit/CI as applicable) and makes the changes needed to
+  pass it clean, scoped to that tool alone. This keeps "we're now enforcing
+  X" as its own reviewable decision, separate from the rest of the Starbase
+  sync.
 - A large, net-new file generated from a template (e.g. `AGENTS.md` derived
   from `AGENTS.lib.md`/`AGENTS.app.md`) — even though it's part of the
   Starbase scaffolding, its size and repo-specific content make it worth
