@@ -175,9 +175,13 @@ When you identify such a change:
    continue the Starbase merge work; rebase again once each one lands. Note
    pending preparation PRs in the merge PR description so reviewers know why
    a fix they might expect to see isn't there.
-   - Keep every preparation PR in **draft** for its entire life until it is
-     ready to merge — do not mark one ready for review just because the
-     merge PR itself is progressing.
+   - Keep every preparation PR in **draft** for its entire life. **The agent
+     must never mark a preparation PR ready for review or merge it itself —
+     only the operator takes a PR out of draft**, the same as for the merge
+     PR itself. Once a preparation PR's CI is green and review feedback is
+     addressed, report it to the operator (per the next bullet) and wait for
+     them to promote and merge it; do not do so yourself even if the merge
+     work is otherwise blocked on it.
    - Whenever you open, update, or check in on a preparation PR, also report
      it directly to the user/operator (not only in the merge PR description):
      list every open preparation PR by title with a direct link, and its
@@ -217,7 +221,8 @@ When opening the PR, apply the label:
 ## PR review and CI
 
 - Open the PR as a draft, request a Copilot review while it is still draft, and
-  keep iterating until the review is clean enough to mark ready.
+  keep iterating until the review is clean enough for the operator to mark it
+  ready.
 - Check the PR's CI status before handing it off.
 - If a reviewer's requested change contradicts a rule in this skill (the
   file-ownership map, a conflict-resolution rule, or any other documented
@@ -235,12 +240,13 @@ When opening the PR, apply the label:
 - Squash the follow-up-fix commits back into the single merge commit twice,
   at two distinct points:
   1. Once CI is green and the PR is ready to come out of draft: squash all
-     follow-up-fix commits made so far into the original merge commit, then:
-     - **Non-interactive harness**: mark the PR ready for review.
-     - **Interactive harness**: do *not* mark the PR ready. Instead, send the
-       operator a message with the draft PR URL and a brief summary (what was
-       merged, any conflicts resolved, any custom changes made) and stop.
-       Leave promoting the PR to the operator.
+     follow-up-fix commits made so far into the original merge commit, then
+     send the operator a message with the draft PR URL and a brief summary
+     (what was merged, any conflicts resolved, any custom changes made) and
+     stop. **The agent must never mark any PR ready for review itself** —
+     regardless of harness type (interactive or non-interactive) — only the
+     operator takes a PR out of draft. Leave promoting the PR to the
+     operator.
   2. Right before the final merge into the base branch: squash any further
      follow-up commits made during the ready-for-review round (e.g., fixes
      from human reviewers) back into that same single merge commit.
