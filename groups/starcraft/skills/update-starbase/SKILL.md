@@ -175,6 +175,15 @@ When you identify such a change:
    continue the Starbase merge work; rebase again once each one lands. Note
    pending preparation PRs in the merge PR description so reviewers know why
    a fix they might expect to see isn't there.
+   - Keep every preparation PR in **draft** for its entire life until it is
+     ready to merge — do not mark one ready for review just because the
+     merge PR itself is progressing.
+   - Whenever you open, update, or check in on a preparation PR, also report
+     it directly to the user/operator (not only in the merge PR description):
+     list every open preparation PR by title with a direct link, and its
+     current status (draft, awaiting review, merged, etc.), so they always
+     have an up-to-date view without having to dig through the merge PR's
+     description themselves.
 5. **Use the same provenance conventions**: preparation PRs still use the
    robot-prefix comment template and merge-commit-message rules where
    applicable — they are otherwise ordinary PRs, not Starbase-merge-specific.
