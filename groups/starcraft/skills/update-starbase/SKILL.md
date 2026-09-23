@@ -36,7 +36,7 @@ printed. The steps below expand on each item in detail:
    Scan all files that were added or modified by the merge for any remaining "Starcraft" or "Starbase" placeholder text:
 
    ```bash
-   git diff --name-only --diff-filter=d starbase/main...HEAD | xargs -r grep -i -E "starcraft|starbase"
+   git diff --name-only --diff-filter=d HEAD^1 HEAD | xargs -r grep -i -E "starcraft|starbase"
    ```
 
    Update any matches found (except external docs/style guide URLs) to use the child repository's name and purpose.

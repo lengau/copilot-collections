@@ -74,7 +74,15 @@ echo ""  # blank line before the structured output block
 
 # ── Structured output for the agent ──────────────────────────────────────────
 
-CHANGED_FILES=$(git diff --name-only --diff-filter=d starbase/main...HEAD)
+if [[ $MERGE_EXIT -eq 0 ]]; then
+  # Merge committed: HEAD is now the merge commit, HEAD^1 is the pre-merge
+  # tip of the work branch, so this shows exactly what the merge touched.
+  CHANGED_FILES=$(git diff --name-only --diff-filter=d HEAD^1 HEAD)
+else
+  # Merge stopped with conflicts: no merge commit exists yet, so compare the
+  # working tree/index against the pre-merge HEAD instead.
+  CHANGED_FILES=$(git diff --name-only --diff-filter=d HEAD)
+fi
 CONFLICTED_FILES=$(git --no-pager diff --name-only --diff-filter=U 2>/dev/null || true)
 
 if [[ $MERGE_EXIT -eq 0 ]]; then
@@ -99,7 +107,7 @@ EOF
 $(echo "$PLACEHOLDER_HITS" | sed 's/^/  /')
 
   Run to confirm matches:
-    git diff --name-only --diff-filter=d starbase/main...HEAD | xargs -r grep -i -E "starcraft|starbase"
+    git diff --name-only --diff-filter=d HEAD^1 HEAD | xargs -r grep -i -E "starcraft|starbase"
 
   Update any matches (except external URLs) to use this repo's name/purpose.
 
@@ -166,7 +174,7 @@ NEXT STEPS FOR THE AGENT
      git merge --continue
 
 3. Scan all changed files for placeholder text:
-     git diff --name-only --diff-filter=d starbase/main...HEAD | \\
+     git diff --name-only --diff-filter=d HEAD^1 HEAD | \\
        xargs -r grep -i -E "starcraft|starbase"
    Update any matches (except external URLs) to this repo's identity.
 
