@@ -6,11 +6,25 @@ Bundling pre-existing or unrelated changes into the Starbase merge PR obscures t
 
 ---
 
-## 1. Triggers for a Preparation PR
+## 1. Recognizing a candidate
+
+You won't know upfront which fixes need their own PR — this only becomes
+clear while resolving conflicts and running validation. Watch for it
+throughout the merge, not just at the end.
+
+For any fix, adjustment, or addition you're about to fold into the merge PR,
+ask: **would this still be needed on `main` even without the Starbase merge**,
+or does it exist only to patch a side effect of another fixup you just made?
+If either is true, it likely belongs in its own PR rather than as a
+merge-PR follow-up commit — check it against the trigger categories below to
+confirm.
+
+## 2. Triggers for a Preparation PR
 
 Open a separate preparation PR if a change falls into any of these categories:
 
-- **Unrelated or pre-existing fixes**: A latent bug or issue exposed by new tooling that is not a Starbase file or convention, or a fix that would still be needed on `main` without the Starbase sync.
+- **Unrelated or pre-existing fixes**: A latent bug or issue exposed by new
+  tooling that isn't itself a Starbase file or convention.
 - **Chain-reaction fixes**: A follow-up fix that only became necessary *because of* an earlier follow-up fix, rather than because of the Starbase merge itself.
 - **Unrelated dependency or version bumps**: A bump driven by an external factor (e.g. security scanner finding against a pinned test fixture) rather than the Starbase sync.
 - **Purely mechanical reformatting**: Diff produced by a newly introduced formatter or linter (e.g. `tombi`, `shfmt`) with no logic changes. Keep the formatting diff separate so it can be reviewed and reverted independently.
@@ -21,7 +35,7 @@ Open a separate preparation PR if a change falls into any of these categories:
 
 ---
 
-## 2. Preparation PR Lifecycle & Rules
+## 3. Preparation PR Lifecycle & Rules
 
 1. **Branch from `origin/main`**:
    - Create a fresh branch from `origin/main` (not the merge branch):
@@ -39,18 +53,23 @@ Open a separate preparation PR if a change falls into any of these categories:
    - Once CI is green and reviews are addressed, report the PR to the operator and wait for them to promote and merge it.
 
 4. **Report open preparation PRs to the operator**:
-   - Whenever opening, updating, or checking on preparation PRs, report them directly in your response to the user/operator.
-   - Include direct links, titles, and current status (e.g., draft, CI running, ready for operator promotion).
+   - Whenever you open, update, or check in on a preparation PR, report on
+     **every currently open preparation PR** directly to the user/operator —
+     not just the one you were just working on. List each by title with a
+     direct link, plus its current status (e.g., draft, CI running, ready
+     for operator promotion), so they always have an up-to-date view without
+     digging through the merge PR's description.
 
 5. **Rebase the merge branch**:
    - Do not block ongoing Starbase merge work while waiting for prep PRs to merge.
-   - Note pending preparation PRs in the merge PR description.
+   - Note pending preparation PRs in the merge PR description so reviewers
+     know why a fix they might expect to see isn't there.
    - Once a preparation PR merges into `main`, rebase the merge branch onto the updated `origin/main` so the fix drops out of the merge PR diff.
    - Do not mark the Starbase merge PR ready for review until all dependent preparation PRs are merged.
 
 ---
 
-## 3. Description & Provenance Requirements
+## 4. Description & Provenance Requirements
 
 Preparation PR descriptions must include explicit provenance links:
 
