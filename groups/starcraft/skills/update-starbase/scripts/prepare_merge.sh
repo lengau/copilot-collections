@@ -96,7 +96,7 @@ Branch:       ${BRANCH}
 Merged from:  starbase/main → $(git rev-parse --short starbase/main)
 ════════════════════════════════════════════════════════════
 
-CHANGED FILES ($(echo "$CHANGED_FILES" | grep -c . || echo 0)):
+CHANGED FILES ($(echo "$CHANGED_FILES" | grep -c . || true)):
 $(echo "$CHANGED_FILES" | sed 's/^/  /')
 
 EOF
@@ -155,10 +155,10 @@ Branch:       ${BRANCH}
 Merged from:  starbase/main → $(git rev-parse --short starbase/main)
 ════════════════════════════════════════════════════════════
 
-CONFLICTED FILES ($(echo "$CONFLICTED_FILES" | grep -c . || echo 0)):
+CONFLICTED FILES ($(echo "$CONFLICTED_FILES" | grep -c . || true)):
 $(echo "$CONFLICTED_FILES" | sed 's/^/  /')
 
-ALL CHANGED FILES ($(echo "$CHANGED_FILES" | grep -c . || echo 0)):
+ALL CHANGED FILES ($(echo "$CHANGED_FILES" | grep -c . || true)):
 $(echo "$CHANGED_FILES" | sed 's/^/  /')
 
 NEXT STEPS FOR THE AGENT
