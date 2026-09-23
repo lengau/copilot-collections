@@ -40,6 +40,11 @@ printed. The steps below expand on each item in detail:
    ```
 
    Update any matches found (except external docs/style guide URLs) to use the child repository's name and purpose.
+   Do **not** touch legitimate Starbase-ownership/attribution comments (for
+   example "Should only be edited in the `starbase` repository", see
+   [`references/file_ownership.md`](references/file_ownership.md)) — those
+   are intentional and must be preserved verbatim, not mistaken for
+   placeholder text.
 
 3. Document change provenance on each file:
    For every file added, deleted, or modified by the merge, make review comments on the GitHub PR explaining the provenance of the changes. Additionally, post inline review comments pointing out specific custom changes (e.g., removing a duplicate directive or fixing a type ignore).
