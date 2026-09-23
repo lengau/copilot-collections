@@ -55,6 +55,23 @@ info "Step 3: Fetching starbase (--prune)..."
 git fetch starbase --prune >&2
 ok "Fetch complete."
 
+# ── Step 3b: Bail out early if there's nothing new to sync ──────────────────
+
+if git merge-base --is-ancestor starbase/main HEAD; then
+  ok "Already up to date with starbase/main — no new commits to sync."
+  cat <<EOF
+
+════════════════════════════════════════════════════════════
+MERGE RESULT: already-up-to-date
+════════════════════════════════════════════════════════════
+
+starbase/main has no commits that aren't already in HEAD. No work
+branch was created and no merge is needed — there's nothing to open
+a PR for.
+EOF
+  exit 0
+fi
+
 # ── Step 4: Create work branch ───────────────────────────────────────────────
 
 info "Step 4: Creating branch '${BRANCH}'..."

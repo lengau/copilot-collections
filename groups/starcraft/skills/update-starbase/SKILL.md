@@ -20,7 +20,11 @@ bash <path-to-skill>/scripts/prepare_merge.sh [BRANCH_SUFFIX]
   work-branch creation, merge, and conflict detection.
 - It exits **non-zero and prints `MERGE RESULT: merge-conflicted`** if
   the merge stops with conflicts, or exits **zero and prints
-  `MERGE RESULT: merge-clean`** on success.
+  `MERGE RESULT: merge-clean`** on success. If `starbase/main` has no
+  commits that aren't already in the branch, it instead exits **zero and
+  prints `MERGE RESULT: already-up-to-date`**, without creating a work
+  branch — there is nothing to sync, so stop here and report that to
+  the user.
 - In both cases the script prints a **`NEXT STEPS FOR THE AGENT`** block
   listing exactly what to do next — read it and follow it.
 
@@ -94,6 +98,7 @@ printed. The steps below expand on each item in detail:
 Report one of:
 - `merge-clean`: Starbase merged with no conflicts.
 - `merge-conflicted`: merge stopped with conflicts, including the file list from `git status --short`.
+- `already-up-to-date`: no new Starbase commits to sync; no work branch was created and no PR is needed.
 
 ## Pre-PR validation (required)
 
