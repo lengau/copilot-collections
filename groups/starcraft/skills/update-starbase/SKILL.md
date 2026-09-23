@@ -165,6 +165,23 @@ When opening the PR, apply the label:
      from human reviewers) back into that same single merge commit.
   Between these two squash points, follow-up fixes should again land as
   separate commits, not be squashed continuously.
+  Use this non-destructive recipe for each squash (a plain `git rebase -i`
+  can drop the merge commit's second parent or flatten the history, since
+  the branch's first commit is itself a merge commit):
+  ```bash
+  # Find the merge commit created by the sync (its only merge commit).
+  MERGE_HASH=$(git log --merges -n 1 --format=%H)
+
+  # Soft-reset to it: this keeps every follow-up-fix diff staged, without
+  # touching the merge commit's parents.
+  git reset --soft "$MERGE_HASH"
+
+  # Fold the staged diffs into the merge commit, keeping its message/parents.
+  git commit --amend --no-edit
+
+  # Push the rewritten branch.
+  git push --force-with-lease origin <branch>
+  ```
 - **The provenance/documentation rules in "Document change provenance on each
   file" apply for the entire life of the PR, not just the initial merge.**
   Any manual code change made while fixing CI failures or responding to review
