@@ -33,8 +33,11 @@ If the script cannot be run, follow [`references/manual_merge_steps.md`](referen
 After the script completes, follow the `NEXT STEPS FOR THE AGENT` block it
 printed. The steps below expand on each item in detail:
 
-1. If GitHub reports conflicts with `main`, fetch the latest `origin/main` and
-   redo the merge from that branch before continuing.
+1. If `origin/main` or `starbase/main` gains new commits while the merge PR
+   is still open (including "GitHub reports conflicts with `main`"), do
+   **not** stack another merge commit on top. Follow
+   [`references/refresh_stale_pr.md`](references/refresh_stale_pr.md) to
+   rebuild the merge instead.
 
 2. Clean up placeholder text in all merged files (both conflicted and cleanly merged):
    Scan all files that were added or modified by the merge for any remaining "Starcraft" or "Starbase" placeholder text:
