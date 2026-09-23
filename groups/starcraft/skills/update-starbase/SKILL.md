@@ -133,8 +133,11 @@ When opening the PR, apply the label:
 
 ## PR review and CI
 
-- Open the PR as a draft, request a Copilot review while it is still draft, and
-  keep iterating until the review is clean enough for the operator to mark it
+- Open the PR as a draft, request a Copilot review while it is still draft
+  (`gh pr create --draft --reviewer "copilot-pull-request-reviewer[bot]" ...`,
+  or `gh pr edit <PR_NUMBER> --add-reviewer
+  "copilot-pull-request-reviewer[bot]"` on an already-open PR), and keep
+  iterating until the review is clean enough for the operator to mark it
   ready.
 - Check the PR's CI status before handing it off.
 - If a reviewer's requested change contradicts a rule in this skill (the
