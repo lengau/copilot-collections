@@ -1,7 +1,7 @@
 ---
 name: update-starbase
 description: Syncs Starbase-managed project files by adding the canonical/starbase remote and merging starbase/main into the current branch. Use when updating common.mk and related shared Starcraft build/CI conventions.
-allowed-tools: make git
+allowed-tools: make git gh bash
 ---
 
 # Update Starbase
