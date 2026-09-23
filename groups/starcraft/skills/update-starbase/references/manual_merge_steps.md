@@ -27,10 +27,12 @@ They are the exact equivalent of what the script does.
    git fetch starbase --prune
    ```
 
-4. Create a work branch before starting the merge:
+4. Create a work branch before starting the merge (match `prepare_merge.sh`'s
+   naming so both paths are consistent: `work/update-starbase-YYYY-MM-DD`,
+   or append a custom suffix instead of the date):
 
    ```bash
-   git switch -c work/<descriptive-branch-name>
+   git switch -c work/update-starbase-YYYY-MM-DD
    ```
 
 5. Merge from Starbase main into the current branch:
