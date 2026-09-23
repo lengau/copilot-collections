@@ -268,43 +268,9 @@ When opening the PR, apply the label:
 
 If significant time has passed since the merge PR was opened and either
 `origin/main` or `starbase/main` has gained new commits, do not layer another
-merge commit on top of the existing one. Instead, rebuild the merge commit
-from the current heads of both branches while preserving every follow-up-fix
-commit already pushed to the PR:
-
-1. `git fetch origin --prune && git fetch starbase --prune` to get both
-   branches' latest state.
-2. Create a fresh branch from the current `origin/main` (do not reuse the old
-   merge base): `git checkout -b <new-branch> origin/main`.
-3. `git merge --no-ff --no-commit starbase/main` and resolve conflicts using
-   the same file-ownership map and decisions as the original merge. Diff the
-   new merge tree against the old merge commit
-   (`git diff <new-working-tree> <old-merge-commit> --stat`) to catch any
-   conflict-map resolutions, placeholder-text cleanups, or lint-rule fixes
-   that the new merge silently skipped (for example, because
-   `starbase/main` didn't touch a file that the old merge still needed to
-   modify, so git raises no conflict for it at all — reapply those changes
-   manually from the old merge commit).
-4. Commit the merge using the same commit message template as any other
-   Starbase merge (see "Merge commit message format"), updating the date.
-5. Cherry-pick every follow-up-fix commit from the old branch, in order, onto
-   the new merge commit: `git cherry-pick <fix-1> <fix-2> ...`. These commits
-   must be preserved, not redone from scratch or squashed away.
-6. Re-run the pre-PR validation commands (`make format`, `make lint`,
-   `make docs`; `make test-fast` at your discretion) against the rebuilt
-   branch before pushing.
-7. Force-push the rebuilt branch to the existing PR branch (use
-   `--force-with-lease` against the branch's current remote tip for safety).
-8. Update the PR title's date to match the new merge date (see "Merge commit
-   message format" for the title/subject format). `gh pr edit --title` can
-   spuriously fail on repos with legacy Projects (classic) boards; if it
-   errors, fall back to
-   `gh api repos/{owner}/{repo}/pulls/{number} -X PATCH -f title="..."` and
-   confirm the new title with a follow-up `gh pr view --json title`.
-9. Post a PR comment (standard robot-prefix template) noting that history was
-   rewritten and force-pushed, and summarizing what changed on each side
-   (new commits pulled in from `origin/main` and/or `starbase/main`) and
-   confirming the follow-up-fix commits were preserved.
+merge commit on top of the existing one. Follow
+[`references/refresh_stale_pr.md`](references/refresh_stale_pr.md) to rebuild the
+merge commit and preserve all existing follow-up commits.
 
 ## Merge commit message format
 
