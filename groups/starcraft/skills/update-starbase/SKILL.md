@@ -24,7 +24,10 @@ bash <path-to-skill>/scripts/prepare_merge.sh [BRANCH_SUFFIX]
   commits that aren't already in the branch, it instead exits **zero and
   prints `MERGE RESULT: already-up-to-date`**, without creating a work
   branch — there is nothing to sync, so stop here and report that to
-  the user.
+  the user. If `git merge` exits non-zero but leaves no conflicted files
+  (an unexpected git error, not an ordinary conflict), it aborts the merge
+  and exits **non-zero, printing `MERGE RESULT: merge-failed`** instead —
+  fix the underlying issue before re-running the script.
 - In both cases the script prints a **`NEXT STEPS FOR THE AGENT`** block
   listing exactly what to do next — read it and follow it.
 
@@ -34,6 +37,8 @@ Report one of:
 - `merge-clean`: Starbase merged with no conflicts.
 - `merge-conflicted`: merge stopped with conflicts, including the file list from `git status --short`.
 - `already-up-to-date`: no new Starbase commits to sync; no work branch was created and no PR is needed.
+- `merge-failed`: `git merge` failed for a reason other than an ordinary conflict; the merge was aborted and the underlying error must be fixed before retrying.
+
 
 ### Conflict resolution
 

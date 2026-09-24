@@ -166,6 +166,28 @@ or mixed-ownership files that need manual resolution.
 EOF
 
 else
+  # ── HARD FAILURE vs. CONFLICTED MERGE ───────────────────────────────────────
+  # A nonzero exit with no conflicted files means git failed for some other
+  # reason (untracked files that would be overwritten, a failing merge hook,
+  # etc.), not an ordinary merge conflict — don't send the agent down the
+  # conflict-resolution path for an error that doesn't exist.
+  if [[ -z "$CONFLICTED_FILES" ]]; then
+    git merge --abort 2>/dev/null || true
+    cat <<EOF
+════════════════════════════════════════════════════════════
+MERGE RESULT: merge-failed
+Branch:       ${BRANCH}
+════════════════════════════════════════════════════════════
+
+git merge exited non-zero (exit ${MERGE_EXIT}) but left no conflicted
+files, so this is not an ordinary merge conflict. See the git output
+above for the actual error (e.g. untracked files that would be
+overwritten, a failing merge hook). The merge has been aborted; fix
+the underlying issue, then re-run this script.
+EOF
+    exit 1
+  fi
+
   # ── CONFLICTED MERGE ────────────────────────────────────────────────────────
   cat <<EOF
 ════════════════════════════════════════════════════════════
