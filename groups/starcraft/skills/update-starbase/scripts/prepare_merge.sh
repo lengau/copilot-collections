@@ -85,7 +85,7 @@ ok "Switched to new branch '${BRANCH}'."
 
 info "Step 5: Merging starbase/main (--no-ff)..."
 MERGE_EXIT=0
-git merge --no-ff starbase/main >&2 || MERGE_EXIT=$?
+git merge --no-ff --allow-unrelated-histories starbase/main >&2 || MERGE_EXIT=$?
 
 echo ""  # blank line before the structured output block
 

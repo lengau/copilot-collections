@@ -35,10 +35,12 @@ They are the exact equivalent of what the script does.
    git switch -c work/update-starbase-YYYY-MM-DD
    ```
 
-5. Merge from Starbase main into the current branch:
+5. Merge from Starbase main into the current branch (`--allow-unrelated-histories`
+   is required for a repository's first-ever Starbase sync, and is a safe
+   no-op on repositories that already share history with Starbase):
 
    ```bash
-   git merge --no-ff starbase/main
+   git merge --no-ff --allow-unrelated-histories starbase/main
    ```
 
 6. Capture merge state:
