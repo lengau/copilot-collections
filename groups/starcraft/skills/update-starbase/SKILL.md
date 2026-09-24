@@ -124,18 +124,23 @@ Conflict resolution applied:
 
    Do not create the PR until these commands complete successfully.
 
-3. Check for preparation PRs (as needed):
+3. Check every file changed by the merge for preparation PR candidates
+   (required):
 
    Some fixes discovered while merging or validating are pre-existing or
    unrelated issues (e.g. latent bugs, mechanical formatting diffs, new
    default-enabled tooling, or large net-new template files). Bundling these
-   into the merge PR obscures the merge diff.
+   into the merge PR obscures the merge diff. This is a mandatory audit, not
+   a reactive check — do not wait for a reviewer to flag it.
 
-   When you encounter an unrelated issue, split it into a separate draft
-   preparation PR against `origin/main` before finalizing the merge. Consult
+   When you find one, split it into a separate draft preparation PR against
+   `origin/main` before finalizing the merge — using its own git worktree,
+   and optionally delegated to a background subagent, so it doesn't block
+   the main merge work. Consult
    [`references/preparation_prs.md`](references/preparation_prs.md) for
-   trigger criteria, stacked PR workflows, lifecycle requirements
-   (draft-only, operator promotion), and provenance link rules.
+   trigger criteria, the worktree/subagent workflow, stacked PR workflows,
+   lifecycle requirements (draft-only, operator promotion), and provenance
+   link rules.
 
 ## Phase 3: Pull Request Creation
 
