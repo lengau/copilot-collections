@@ -94,11 +94,13 @@ echo ""  # blank line before the structured output block
 if [[ $MERGE_EXIT -eq 0 ]]; then
   # Merge committed: HEAD is now the merge commit, HEAD^1 is the pre-merge
   # tip of the work branch, so this shows exactly what the merge touched.
-  CHANGED_FILES=$(git diff --name-only --diff-filter=d HEAD^1 HEAD)
+  # Deleted files are kept (no --diff-filter=d) so they still get a
+  # provenance comment; see references/pr_provenance.md.
+  CHANGED_FILES=$(git diff --name-only HEAD^1 HEAD)
 else
   # Merge stopped with conflicts: no merge commit exists yet, so compare the
   # working tree/index against the pre-merge HEAD instead.
-  CHANGED_FILES=$(git diff --name-only --diff-filter=d HEAD)
+  CHANGED_FILES=$(git diff --name-only HEAD)
 fi
 CONFLICTED_FILES=$(git --no-pager diff --name-only --diff-filter=U 2>/dev/null || true)
 
