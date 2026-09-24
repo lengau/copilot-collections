@@ -22,7 +22,9 @@ Do not layer another merge commit on top of an existing one. Instead, rebuild th
    
    Diff the new working tree against the old merge commit to catch any conflict resolutions, placeholder cleanups, or lint fixes that git may have silently skipped:
    ```bash
-   git diff <new-working-tree> <old-merge-commit> --stat
+   git diff <old-merge-commit>
+   # or with --stat for a summary:
+   git diff <old-merge-commit> --stat
    ```
    Reapply any missing changes manually from the old merge commit.
 
