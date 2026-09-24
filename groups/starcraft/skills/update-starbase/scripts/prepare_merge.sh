@@ -129,6 +129,9 @@ $(echo "$PLACEHOLDER_HITS" | sed 's/^/  /')
     git diff --name-only --diff-filter=d HEAD^1 HEAD | xargs -r grep -i -E "starcraft|starbase"
 
   Update any matches (except external URLs) to use this repo's name/purpose.
+  Do NOT touch legitimate Starbase attribution/ownership comments (e.g.
+  "Should only be edited in the starbase repository") — see
+  references/file_ownership.md.
 
 EOF
   else
@@ -218,6 +221,9 @@ NEXT STEPS FOR THE AGENT
      git diff --name-only --diff-filter=d HEAD^1 HEAD | \\
        xargs -r grep -i -E "starcraft|starbase"
    Update any matches (except external URLs) to this repo's identity.
+   Do NOT touch legitimate Starbase attribution/ownership comments (e.g.
+   "Should only be edited in the starbase repository") — see
+   references/file_ownership.md.
 
 4. Run pre-PR validation:
      make format
